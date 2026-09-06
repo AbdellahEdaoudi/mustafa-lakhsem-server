@@ -1,6 +1,6 @@
 const allowedOrigins = [
     "https://mustafa-lakhsem.vercel.app",
-    "https://www.mustafa-lakhsem.vercel.app",
+    "https://mustafalakhsem.vercel.app",
     "https://mustafalakhsem.com",
     "https://www.mustafalakhsem.com",
     "http://localhost:3000"
