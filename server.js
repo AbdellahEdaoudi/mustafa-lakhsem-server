@@ -1,5 +1,7 @@
 require("dotenv").config();
 const express = require("express");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
 const app = express();
 const cors = require("cors")
 const cookieParser = require('cookie-parser');
@@ -9,9 +11,16 @@ const { corsOption } = require(path.join(__dirname, 'config', 'corsOptions'));
 const { connectDB } = require("./config/dbConnect");
 const { apiLimiter, authLimiter, contactLimiter, subscribeLimiter } = require("./middlewares/rateLimiter");
 
+// Security Headers
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 app.use(cors(corsOption));
 app.use(cookieParser())
 app.use(express.json({ limit: '10mb' }));
+
+// Sanitize user-supplied data to prevent MongoDB Operator Injection
+app.use(mongoSanitize());
 
 // Apply Rate Limiters
 app.use("/api", apiLimiter);
