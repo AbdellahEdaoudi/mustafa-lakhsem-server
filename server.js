@@ -19,8 +19,12 @@ app.use(cors(corsOption));
 app.use(cookieParser())
 app.use(express.json({ limit: '10mb' }));
 
-// Sanitize user-supplied data to prevent MongoDB Operator Injection
-app.use(mongoSanitize());
+// Sanitize user-supplied data to prevent MongoDB Operator Injection (Express v5 compatible)
+app.use((req, res, next) => {
+  if (req.body) mongoSanitize.sanitize(req.body);
+  if (req.params) mongoSanitize.sanitize(req.params);
+  next();
+});
 
 // Apply Rate Limiters
 app.use("/api", apiLimiter);
