@@ -3,6 +3,7 @@ const express = require("express");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const app = express();
+const compression = require("compression");
 const cors = require("cors")
 const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 5000;
@@ -10,6 +11,8 @@ const path = require("path");
 const { corsOption } = require(path.join(__dirname, 'config', 'corsOptions'));
 const { connectDB } = require("./config/dbConnect");
 const { apiLimiter, authLimiter, contactLimiter, subscribeLimiter } = require("./middlewares/rateLimiter");
+
+app.use(compression());
 
 // Security Headers
 app.use(helmet({

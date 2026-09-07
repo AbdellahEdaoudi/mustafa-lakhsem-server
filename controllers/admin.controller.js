@@ -4,8 +4,21 @@ const Subscriber = require("../models/subscriber.model");
 // Get all contacts (for admin)
 exports.getContacts = async (req, res) => {
     try {
-        const contacts = await Contact.find().sort({ createdAt: -1 });
-        res.status(200).json(contacts);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const [contacts, total] = await Promise.all([
+            Contact.find().sort({ createdAt: -1 }).limit(limit).skip(skip),
+            Contact.countDocuments(),
+        ]);
+
+        res.status(200).json({
+            contacts,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+        });
     } catch (error) {
         console.error("Get Contacts Error:", error);
         res.status(500).json({ message: "Server error retrieving contacts" });
@@ -15,8 +28,21 @@ exports.getContacts = async (req, res) => {
 // Get all subscribers (for admin)
 exports.getSubscribers = async (req, res) => {
     try {
-        const subscribers = await Subscriber.find().sort({ createdAt: -1 });
-        res.status(200).json(subscribers);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = (page - 1) * limit;
+
+        const [subscribers, total] = await Promise.all([
+            Subscriber.find().sort({ createdAt: -1 }).limit(limit).skip(skip),
+            Subscriber.countDocuments(),
+        ]);
+
+        res.status(200).json({
+            subscribers,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+        });
     } catch (error) {
         console.error("Get Subscribers Error:", error);
         res.status(500).json({ message: "Server error retrieving subscribers" });

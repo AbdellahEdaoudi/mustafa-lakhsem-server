@@ -55,12 +55,14 @@ const ContactSchema = new mongoose.Schema(
                 message: "You must accept the privacy policy",
             },
         },
-        isRead: { type: Boolean, default: false },
-        isStarred: { type: Boolean, default: false },
+        isRead: { type: Boolean, default: false, index: true },
+        isStarred: { type: Boolean, default: false, index: true },
     },
     {
         timestamps: true,
     }
 );
+
+ContactSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.models.Contact || mongoose.model("Contact", ContactSchema);
