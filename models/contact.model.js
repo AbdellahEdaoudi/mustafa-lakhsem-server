@@ -35,26 +35,19 @@ const ContactSchema = new mongoose.Schema(
 
         type: {
             type: String,
-            required: [true, "Please select an inquiry type"],
+            required: [true, "Please add a subject"],
             trim: true,
+            maxlength: [150, "Subject cannot exceed 150 characters"],
         },
 
         message: {
             type: String,
             required: [true, "Please add a message"],
             trim: true,
-            minlength: [10, "Message must be at least 10 characters"],
+            minlength: [100, "Message must be at least 100 characters"],
             maxlength: [5000, "Message cannot exceed 5000 characters"],
         },
 
-        gdpr: {
-            type: Boolean,
-            required: true,
-            validate: {
-                validator: (value) => value === true,
-                message: "You must accept the privacy policy",
-            },
-        },
         isRead: { type: Boolean, default: false, index: true },
         isStarred: { type: Boolean, default: false, index: true },
     },

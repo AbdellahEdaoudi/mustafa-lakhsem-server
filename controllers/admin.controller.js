@@ -8,14 +8,18 @@ exports.getContacts = async (req, res) => {
         const limit = parseInt(req.query.limit) || 20;
         const skip = (page - 1) * limit;
 
-        const [contacts, total] = await Promise.all([
+        const [contacts, total, unreadCount, starredCount] = await Promise.all([
             Contact.find().sort({ createdAt: -1 }).limit(limit).skip(skip),
             Contact.countDocuments(),
+            Contact.countDocuments({ isRead: false }),
+            Contact.countDocuments({ isStarred: true }),
         ]);
 
         res.status(200).json({
             contacts,
             total,
+            unreadCount,
+            starredCount,
             page,
             totalPages: Math.ceil(total / limit),
         });
