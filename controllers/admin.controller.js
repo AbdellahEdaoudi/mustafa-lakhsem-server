@@ -6,11 +6,19 @@ exports.getContacts = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
+        const filter = req.query.filter || "all";
         const skip = (page - 1) * limit;
 
+        let query = {};
+        if (filter === "unread") {
+            query = { isRead: false };
+        } else if (filter === "starred") {
+            query = { isStarred: true };
+        }
+
         const [contacts, total, unreadCount, starredCount] = await Promise.all([
-            Contact.find().sort({ createdAt: -1 }).limit(limit).skip(skip),
-            Contact.countDocuments(),
+            Contact.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+            Contact.countDocuments(query),
             Contact.countDocuments({ isRead: false }),
             Contact.countDocuments({ isStarred: true }),
         ]);
@@ -21,7 +29,8 @@ exports.getContacts = async (req, res) => {
             unreadCount,
             starredCount,
             page,
-            totalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(total / limit) || 1,
+            filter,
         });
     } catch (error) {
         console.error("Get Contacts Error:", error);
