@@ -2,6 +2,7 @@ const allowedOrigins = [
     "https://mustafa-lakhsem.vercel.app",
     "https://mustafalakhsem.vercel.app",
     "https://mustafalakhsem.com",
+    "https://mustafa-lakhsem.site",
     "https://www.mustafalakhsem.com",
     "http://localhost:3000"
 ];
